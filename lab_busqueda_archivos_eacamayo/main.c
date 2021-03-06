@@ -12,7 +12,7 @@
 
 void help(void);
 
-int search ( char * dir, char * pattern, int indent);
+int search ( char * dir, char * pattern, int indent, int cont);
 
 int main(int argc, char * argv[]){
 	char * dir;
@@ -32,9 +32,11 @@ int main(int argc, char * argv[]){
 		dir = argv[1];
 		pattern = argv[2];
 	}
-int total = search(dir, pattern, 0);
+int total = 0;
+	fflush(stdin);
+	total = search(dir, pattern, 0, 0);
 		if(total > 0){
-		printf("Total : %d\n, total");
+			printf("Total : %d\n, total");
 		}
 		
 		printf("TODO bucar %s en %s\n", pattern, dir);
@@ -45,8 +47,8 @@ void help (void){
 	fprintf(stdout, "Uso :	./main ARCHIVO Busca un archivo en directorio actual y subdirectorios .\n");
 	fprintf(stdout, "	./main DIR ARCHIVO Busca un archivo en el directorio DIR y subdirectorios. \n");
 }
-int search(char * dir, char * pattern, int indent){
-	
+int search(char * dir, char * pattern, int indent, int cont){
+	//int cont = 0;
 	//1.opendir
   DIR * d;
 	d = opendir(dir);
@@ -62,25 +64,6 @@ int search(char * dir, char * pattern, int indent){
 
 	while((ent = readdir(d)) != NULL){
 		printf("Entrada: %s\n", ent->d_name);
-		if (ent->d_type == DT_DIR) {
-			char path[1024];
-			if(strcmp(ent->d_name, ".")==0 || strcmp(ent->d_name, "..")==0){
-				printf("Peligro! %s\n", ent->d_name);
-				continue;
-			}
-			
-
-				//Concatenar ruta
-
-            snprintf(path, sizeof(path), "%s/%s", dir, ent->d_name);
-            printf("%*s[%s]\n", indent, "", ent->d_name);
-
-			search(path, pattern, indent + 2);
-		} else {
-
-            printf("%*s- %s\n", indent, "", ent->d_name);
-		}
-		
 		if(strstr(ent->d_name, pattern) != NULL) {
 			//El nombre del archivo o directorio coincide con el patron
 			printf("Exito\n");
@@ -96,16 +79,34 @@ int search(char * dir, char * pattern, int indent){
 			
 			
 			printf("Ruta completa: %s \n", rutaCompleta);
-			
-			
-		} else {
+			cont = cont + 1;
 			
 		}
+		if (ent->d_type == DT_DIR) {
+			char path[1024];
+			if(strcmp(ent->d_name, ".")==0 || strcmp(ent->d_name, "..")==0){
+				printf("Peligro! %s\n", ent->d_name);
+				continue;
+			}
+			
+
+				//Concatenar ruta
+
+            snprintf(path, sizeof(path), "%s/%s", dir, ent->d_name);
+            printf("%*s[%s]\n", indent, "", ent->d_name);
+
+			return search(path, pattern, indent + 2, cont);
+		} else {
+
+            printf("%*s- %s\n", indent, "", ent->d_name);
+		}
+		
+		
 		
 		
 
 	}
 	//closedir(dir);
-	return 0;
+	return cont;
 }
 
