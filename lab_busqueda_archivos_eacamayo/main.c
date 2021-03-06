@@ -3,6 +3,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 //ELiana Andrea Camayo Ante
 //Jorge A. Ortiz 
@@ -61,46 +63,46 @@ int search(char * dir, char * pattern, int indent){
 	while((ent = readdir(d)) != NULL){
 		printf("Entrada: %s\n", ent->d_name);
 		if (ent->d_type == DT_DIR) {
-	            	char path[1024];
+			char path[1024];
 			if(strcmp(ent->d_name, ".")==0 || strcmp(ent->d_name, "..")==0){
 				printf("Peligro! %s\n", ent->d_name);
 				continue;
 			}
-			if(strstr(ent->d_name, pattern) != NULL) {
-				//El nombre del archivo o directorio coincide con el patron
-				printf("Exito\n");
-				/*
-				int  tam= strlen(dir)+strlen(ent->d_name)+2;
-				
-				char *rutaCompleta = malloc(tam);
-				
-				strcpy(rutaCompleta, dir);
-				strcat(rutaCompleta,"/");
-				
-				rutaCompleta = strcat(rutaCompleta, ent-> d_name);
-				
-				
-				printf("Ruta completa: %s \n", rutaCompleta);
-				*/
-				
-				
-				
-				
-
-			} else {
-				
-			}
+			
 
 				//Concatenar ruta
 
             snprintf(path, sizeof(path), "%s/%s", dir, ent->d_name);
             printf("%*s[%s]\n", indent, "", ent->d_name);
 
-		search(path, pattern, indent + 2);
+			search(path, pattern, indent + 2);
 		} else {
 
             printf("%*s- %s\n", indent, "", ent->d_name);
 		}
+		
+		if(strstr(ent->d_name, pattern) != NULL) {
+			//El nombre del archivo o directorio coincide con el patron
+			printf("Exito\n");
+			
+			int  tam = strlen(dir)+strlen(ent->d_name)+2;
+			
+			char * rutaCompleta = malloc(tam);
+			
+			strcpy(rutaCompleta, dir);
+			strcat(rutaCompleta,"/");
+			
+			rutaCompleta = strcat(rutaCompleta, ent-> d_name);
+			
+			
+			printf("Ruta completa: %s \n", rutaCompleta);
+			
+			
+		} else {
+			
+		}
+		
+		
 
 	}
 	//closedir(dir);
