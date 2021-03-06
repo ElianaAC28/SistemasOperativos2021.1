@@ -67,7 +67,25 @@ int search(char * dir, char * pattern, int indent){
 				continue;
 			}
 			if(strstr(ent->d_name, pattern) != NULL) {
+				//El nombre del archivo o directorio coincide con el patron
 				printf("Exito\n");
+				/*
+				int  tam= strlen(dir)+strlen(ent->d_name)+2;
+				
+				char *rutaCompleta = malloc(tam);
+				
+				strcpy(rutaCompleta, dir);
+				strcat(rutaCompleta,"/");
+				
+				rutaCompleta = strcat(rutaCompleta, ent-> d_name);
+				
+				
+				printf("Ruta completa: %s \n", rutaCompleta);
+				*/
+				
+				
+				
+				
 
 			} else {
 				
