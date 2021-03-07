@@ -8,21 +8,24 @@
 
 //ELiana Andrea Camayo Ante
 //Jorge A. Ortiz 
-//Ultima modificación: 03/03/2021
+//Ultima modificación: 06/03/2021
 
 void help(void);
-
+DIR * d;
+struct dirent * ent;
 int search ( char * dir, char * pattern, int indent, int cont);
 
 int main(int argc, char * argv[]){
 	char * dir;
 	char * pattern;
+	
+	
+	
 	if(argc <2 || argc> 3){
 		help();
 		exit(EXIT_FAILURE);
 	}
 
-//POST: argc==2 || argc ==3
 //Si argc ==2, buscar en el directorio actual
 //"." hace referencia al directorio actuañ
 	if(argc==2){
@@ -48,9 +51,8 @@ void help (void){
 	fprintf(stdout, "	./main DIR ARCHIVO Busca un archivo en el directorio DIR y subdirectorios. \n");
 }
 int search(char * dir, char * pattern, int indent, int cont){
-	//int cont = 0;
-	//1.opendir
-  DIR * d;
+	
+	//Se usa opendir sobre dir para obtener apuntador a una estructura DIR
 	d = opendir(dir);
 
 	if( d == NULL){
@@ -58,19 +60,16 @@ int search(char * dir, char * pattern, int indent, int cont){
 		return 0;
 	}
 
-	//2. Readdir
-	struct dirent * ent;
-	
-
+	//Recorre el directorio, se llama a readdir para leer la siguiente entreda del directorio
 	while((ent = readdir(d)) != NULL){
 		printf("Entrada: %s\n", ent->d_name);
 		if(strstr(ent->d_name, pattern) != NULL) {
 			//El nombre del archivo o directorio coincide con el patron
 			printf("Exito\n");
+		
+			//Obtener la ruta completa
 			
-			int  tam = strlen(dir)+strlen(ent->d_name)+2;
-			
-			char * rutaCompleta = malloc(tam);
+			char * rutaCompleta = malloc(strlen(dir)+strlen(ent->d_name)+2);
 			
 			strcpy(rutaCompleta, dir);
 			strcat(rutaCompleta,"/");
@@ -100,10 +99,6 @@ int search(char * dir, char * pattern, int indent, int cont){
 
             printf("%*s- %s\n", indent, "", ent->d_name);
 		}
-		
-		
-		
-		
 
 	}
 	//closedir(dir);
