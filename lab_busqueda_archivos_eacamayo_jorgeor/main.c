@@ -71,7 +71,14 @@ int search(char * dir, char * pattern){
 		//Verificar si el nombre del archivo o directorio coincide con el patron
 		if(strstr(ent->d_name, pattern) != NULL) {
 			//	printf("El nombre del archivo o director coincide con el patron\n");
-			printf("Ruta completa: %s \n", fullPath);
+			printf("Ruta completa: %s ", fullPath);
+			
+			if (-1 == stat(fullPath, &ss))
+				fprintf(stderr, "No se pudo abrir el archivo o directorio '%s'.\n", fullPath);
+			else if (S_ISDIR(ss.st_mode)!=0)
+				printf("(Directorio) \n");
+			else
+				printf("(Archivo) \n");
 			varConcide = varConcide + 1;
 		}
 		//Verificar si es un directori
