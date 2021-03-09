@@ -1,5 +1,5 @@
 Eliana Andrea Camayo Ante <eacamayo@unicauca.edu>
-Jorge A. Ortiz
+Jorge A. Ortiz <jorgeor@unicauca.edu>
 
 Programa que busca un archivo dentro de un directorio
 
