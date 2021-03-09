@@ -5,6 +5,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <time.h>
+#include <stdint.h>
 
 //
 //ELiana Andrea Camayo Ante
@@ -75,10 +77,18 @@ int search(char * dir, char * pattern){
 			
 			if (-1 == stat(fullPath, &ss))
 				fprintf(stderr, "No se pudo abrir el archivo o directorio '%s'.\n", fullPath);
-			else if (S_ISDIR(ss.st_mode)!=0)
-				printf("(Directorio) \n");
-			else
+			else if (S_ISDIR(ss.st_mode)!=0) {
+				printf("(Directorio)\n");
+			} else {
 				printf("(Archivo) \n");
+				
+			}
+			printf("    Tamanio:                %jd bytes\n", (intmax_t) ss.st_size);
+			printf("    Bloques asignados:         %jd\n", (intmax_t) ss.st_blocks);
+			printf("    Ultimo cambio de estado:       %s", ctime(&ss.st_ctime));
+			printf("    Ultimo acceso:         %s", ctime(&ss.st_atime));
+			printf("    Ultima modificacion:   %s", ctime(&ss.st_mtime));
+			printf("\n");
 			varConcide = varConcide + 1;
 		}
 		//Verificar si es un directori
